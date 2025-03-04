@@ -11,6 +11,18 @@ Ce projet permet de créer un hotspot WiFi sous Windows, de générer un QR Code
 - Affichage d'un message et d'un chrono pour informer l'utilisateur du temps d'attente via une interface web Flask.
 
 ---
+## Structure 
+
+/hotspot_project
+│── hotspot.py         # Création et gestion du WiFi
+│── qr_code.py         # Génération du QR Code
+│── user_manager.py    # Gestion du temps d'accès
+│── web_interface.py   # Interface Flask pour afficher les infos
+│── main.py            # Lancement global du projet
+│── requirements.txt   # Liste des dépendances
+│── README.md          # Explication du projet
+
+---
 
 ## 1. Prérequis
 
