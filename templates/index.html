@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statut de Connexion</title>
+    <script>
+        function updateStatus() {
+            let macAddress = "AA:BB:CC:DD:EE:FF"; // Remplace avec l'adresse MAC dynamique
+            fetch(`/status/${macAddress}`)
+                .then(response => response.json())
+                .then(data => {
+                    let remainingTime = data.remaining_time;
+                    let statusText = document.getElementById("status");
+                    let countdown = document.getElementById("countdown");
+                    
+                    if (remainingTime > 0) {
+                        statusText.innerText = "Vous devez attendre avant de vous reconnecter.";
+                        countdown.innerText = `Temps restant : ${remainingTime} secondes`;
+                    } else {
+                        statusText.innerText = "Vous pouvez vous connecter.";
+                        countdown.innerText = "";
+                    }
+                });
+        }
+        setInterval(updateStatus, 1000); // Mise à jour toutes les secondes
+    </script>
+</head>
+<body onload="updateStatus()">
+    <h1>Statut de Connexion</h1>
+    <p id="status">Chargement...</p>
+    <p id="countdown"></p>
+
+    <!-- Section affichant le SSID, le mot de passe et le QR Code -->
+    <div id="wifi-credentials" style="margin-top:20px;">
+        <p><strong>SSID:</strong> MonHotspot</p>
+        <p><strong>Mot de passe:</strong> motdepassewifi</p>
+        <!-- Format WiFi pour QR Code: wifi:S:SSID;T:WPA;P:MotDePasse;; -->
+        <img id="qr-code" src="/static/wifi_qr.png" alt="Code QR WiFi" />
+    </div>
+</body>
+</html>
