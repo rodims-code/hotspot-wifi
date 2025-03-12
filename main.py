@@ -1,32 +1,20 @@
-import threading
-import hotspot
-import qr_code
+import wifi_manager
+import qr_generator
 import web_interface
-from user_manager import UserManager
+import config
+import threading
 
-def start_services():
-    """Démarre le hotspot, génère le QR Code et lance le serveur web."""
-    ssid = "MonHotspot"
-    password = "motdepassewifi"
+def start_hotspot():
+    if wifi_manager.start_hotspot():
+        print(f"Hotspot '{config.SSID}' activé avec succès !")
+        qr_generator.generate_qr(config.SSID, config.PASSWORD)
+        print("QR Code généré : wifi_qr.png")
+    else:
+        print("Échec de l'activation du hotspot.")
 
-    # Démarrer le hotspot
-    hotspot.start_hotspot(ssid, password)
-
-    # Générer le QR Code
-    qr_code.generate_qr_code(ssid, password)
-
-    # Lancer le serveur web dans un thread séparé (sans debug mode)
-    threading.Thread(
-        target=lambda: web_interface.app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False),
-        daemon=True
-    ).start()
-
-    print("Tous les services sont en cours d'exécution...")
+def start_web_interface():
+    web_interface.app.run(host='0.0.0.0', port=5000, debug=False)
 
 if __name__ == "__main__":
-    start_services()
-    user_manager = UserManager()
-    while True:
-        mac_address = input("Entrez une adresse MAC pour connexion : ")
-        if user_manager.can_connect(mac_address):
-            user_manager.start_session(mac_address)
+    start_hotspot()
+    threading.Thread(target=start_web_interface).start()
