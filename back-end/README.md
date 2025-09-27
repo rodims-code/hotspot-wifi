@@ -62,4 +62,3 @@ Projet développé par rodims-code.
 
 ## License
 MIT License.
-

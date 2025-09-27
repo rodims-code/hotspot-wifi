@@ -39,7 +39,27 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hotspot',
     'rest_framework',
+    "django_crontab",
+    "rest_framework_simplejwt",
+
 ]
+
+CRONJOBS = [
+    ('*/1 * * * *', 'hotspot.cron.check_sessions')
+]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
+from datetime import timedelta
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "hotspot.middleware.HotspotAccessMiddleware",
 ]
 
 ROOT_URLCONF = 'db.urls'
